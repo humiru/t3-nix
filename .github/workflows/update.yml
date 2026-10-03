@@ -1,0 +1,53 @@
+name: Update T3 Code
+
+on:
+  schedule:
+    - cron: "17 * * * *"
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Exact version to package; empty means the latest stable release"
+        required: false
+
+permissions:
+  contents: write
+
+concurrency:
+  group: update
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: cachix/install-nix-action@v31
+
+      - name: Bump sources.json
+        id: bump
+        env:
+          VERSION: ${{ inputs.version }}
+        run: |
+          scripts/update.sh "$VERSION"
+          if git diff --quiet -- sources.json; then
+            echo "changed=false" >>"$GITHUB_OUTPUT"
+          else
+            echo "changed=true" >>"$GITHUB_OUTPUT"
+            echo "version=$(jq -r .version sources.json)" >>"$GITHUB_OUTPUT"
+          fi
+
+      # A bump lands only if both packages build and the server starts;
+      # a failure leaves main on the last good version and shows up as a
+      # failed run.
+      - name: Build and check
+        if: steps.bump.outputs.changed == 'true'
+        run: nix flake check -L
+
+      - name: Commit
+        if: steps.bump.outputs.changed == 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "t3code: ${{ steps.bump.outputs.version }}" sources.json
+          git push

@@ -1,0 +1,11 @@
+{
+  "version": "0.0.45",
+  "server": {
+    "url": "https://github.com/pingdotgg/t3code/releases/download/v0.0.45/t3-0.0.45-linux-x64.tar.gz",
+    "hash": "sha256-EFBa50vGpDz6sP3gvwag4NaGL3QDBZG+mUpkDUig1r0="
+  },
+  "desktop": {
+    "url": "https://github.com/pingdotgg/t3code/releases/download/v0.0.45/T3-Code-0.0.45-x86_64.AppImage",
+    "hash": "sha512-YkDnJMsrLtt+uehISAt7z0yc+dfy7I+Odqq2YrzZiU9U5nAq3XQ97b3r2mDlH2rQwHUYEYGEW0pkJcSn8KMFog=="
+  }
+}

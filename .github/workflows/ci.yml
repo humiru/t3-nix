@@ -1,0 +1,37 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  schedule:
+    # Weekly nixpkgs refresh, so the update workflow's build check keeps
+    # meaning something for consumers on a current nixpkgs.
+    - cron: "43 4 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: cachix/install-nix-action@v31
+
+      - name: Refresh nixpkgs
+        if: github.event_name == 'schedule'
+        run: nix flake update
+
+      - run: nix flake check -L
+
+      - name: Commit flake.lock
+        if: github.event_name == 'schedule'
+        run: |
+          git diff --quiet -- flake.lock && exit 0
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "flake: update nixpkgs" flake.lock
+          git push
