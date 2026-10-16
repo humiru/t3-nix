@@ -37,6 +37,10 @@ nix run github:humiru/t3-nix#t3code-server -- serve
 nix run github:humiru/t3-nix#t3code-desktop
 ```
 
+The server's headless browser (HTML previews, browser tabs) is packaged too:
+`t3` links it into `~/.t3/tools` on start instead of letting the server
+download a copy that cannot run on NixOS.
+
 The server finds provider CLIs (`claude`, `codex`) and `git` on `PATH`; the
 package does not bundle them.
 

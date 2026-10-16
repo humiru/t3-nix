@@ -7,5 +7,10 @@
   "desktop": {
     "url": "https://github.com/pingdotgg/t3code/releases/download/v0.1.0/T3-Code-0.1.0-x86_64.AppImage",
     "hash": "sha512-aEeNM9K3a7a+2BoH9cjyui12nENNsX/EdV4b3uWozhTk1zNrYsfuo6SrV7UMKuqYlWUmu5wVbvWh/XX4//ycbA=="
+  },
+  "browser": {
+    "version": "154.0.8037.92",
+    "url": "https://storage.googleapis.com/chrome-for-testing-public/154.0.8037.92/linux64/chrome-headless-shell-linux64.zip",
+    "hash": "sha256-Y2qlx58mk2MumSG4u7BQA4uhFnLgI0bAbCD5ka7Qlvk="
   }
 }

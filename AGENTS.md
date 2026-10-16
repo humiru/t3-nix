@@ -11,6 +11,10 @@ or agent only touches it when packaging breaks.
 - `sources.json` — the single source of truth for what is packaged: version,
   URLs, hashes. Written only by `scripts/update.sh`; never edit it by hand.
 - `pkgs/server.nix` — the server tarball, patched with autoPatchelf.
+- `pkgs/server-wrapper.sh` — `bin/t3`: links the browser below into the
+  server's home, then execs the real binary.
+- `pkgs/browser.nix` — the Chrome for Testing headless shell the server pins
+  for HTML previews and browser tabs, patched with autoPatchelf.
 - `pkgs/desktop.nix` — the AppImage, wrapped with `appimageTools`.
 - `flake.nix` — packages, `overlays.default`, and `checks` (= both packages).
 - `scripts/update.sh` — points `sources.json` at a release.
@@ -27,8 +31,11 @@ or agent only touches it when packaging breaks.
 - **Server and desktop share one version.** T3 Code warns on client/server
   version mismatch, so both packages read the same `sources.json` version.
 - **Hashes come from upstream's checksum files** (`SHA256SUMS` for the server,
-  `latest-linux.yml` for the AppImage), not from downloading artifacts in the
-  script. The build is what verifies them.
+  `latest-linux.yml` for the AppImage, the pin in
+  `apps/server/src/preview/PreviewBrowser.ts` at the release tag for the
+  browser), not from downloading artifacts in the script. The build is what
+  verifies them; the server install check also greps the binary for the
+  browser hash, so a pin that moved without `sources.json` fails there.
 - **The server install check is the real test.** It runs `t3 --version` inside
   the build sandbox, where no `/lib64` loader and no nix-ld exist. A binary
   that only works on the developer's machine fails there. Never disable it.
@@ -43,6 +50,15 @@ or agent only touches it when packaging breaks.
   patching, look at how the payload is embedded before anything else.
 - The tarball ships musl variants of native addons. They are deleted because
   autoPatchelf cannot satisfy them and glibc systems never load them.
+- The server downloads its pinned headless browser on first use into
+  `<base dir>/tools/chrome-headless-shell/linux64/<version>/`, and that path
+  cannot be configured. The download is an FHS binary that needs a `/lib64`
+  loader, so `bin/t3` replaces that directory with a symlink to
+  `pkgs/browser.nix` before every start; the server then finds the browser
+  installed and never downloads. `t3 browser setup` only knows `apt-get` and
+  AppArmor and is not needed on NixOS. The browser's install check renders a
+  page with `--no-sandbox` because the build sandbox has no user namespaces;
+  on a host the server runs it with Chrome's sandbox.
 - Neither package self-updates: a foreground `t3 serve` does not, and
   electron-updater is inert without `$APPIMAGE`. `t3 update` and
   `t3 service install` are upstream's own installer path and are not expected
@@ -55,7 +71,7 @@ or agent only touches it when packaging breaks.
 ## Working here
 
 - Build and check everything: `nix flake check -L`.
-- Format: `nix fmt` (alejandra). Shell: `shellcheck scripts/*.sh`.
+- Format: `nix fmt` (alejandra). Shell: `shellcheck pkgs/*.sh scripts/*.sh`.
 - New files are invisible to the flake until `git add`.
 - Test a packaging change against a specific release with
   `scripts/update.sh <version>`, then restore `sources.json` with git.
