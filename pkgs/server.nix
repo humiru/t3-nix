@@ -53,6 +53,8 @@ in
     # in the safe order, and the hook's own pass over it changes nothing:
     # patchelf leaves the file untouched when a value is already set.
     # Runs before autoPatchelfPostFixup: the implicit hook comes first.
+    # TODO: on a patchelf bump, drop this postFixup and check whether plain
+    # autoPatchelf passes the install check again.
     postFixup = ''
       scratch=$(mktemp -d)
       cp $out/lib/t3code/t3 $scratch/t3
