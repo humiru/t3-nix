@@ -44,6 +44,24 @@ in
       runHook postInstall
     '';
 
+    # autoPatchelf sets the interpreter, then the rpath, in two patchelf runs.
+    # On `t3` (a non-PIE EXEC whose program headers Node's SEA injector already
+    # moved) patchelf 0.18 and 0.19.2 then stretch the page they prepended for
+    # the interpreter over the next LOAD segment, and the binary segfaults
+    # before main. Rpath first, interpreter second yields a sound layout. So
+    # autoPatchelf patches a scratch copy, its values go onto the real binary
+    # in the safe order, and the hook's own pass over it changes nothing:
+    # patchelf leaves the file untouched when a value is already set.
+    # Runs before autoPatchelfPostFixup: the implicit hook comes first.
+    postFixup = ''
+      scratch=$(mktemp -d)
+      cp $out/lib/t3code/t3 $scratch/t3
+      autoPatchelf $scratch
+      patchelf --set-rpath "$(patchelf --print-rpath $scratch/t3)" $out/lib/t3code/t3
+      patchelf --set-interpreter "$(patchelf --print-interpreter $scratch/t3)" $out/lib/t3code/t3
+      rm -r $scratch
+    '';
+
     # Runs in the sandbox, where no /lib64 loader exists: proves the patched
     # binary still starts and that sources.json points at the version it claims,
     # that the wrapper linked the browser, and that the binary pins the same
