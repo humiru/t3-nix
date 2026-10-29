@@ -1,12 +1,12 @@
 {
-  "version": "0.1.4",
+  "version": "0.1.5",
   "server": {
-    "url": "https://github.com/pingdotgg/t3code/releases/download/v0.1.4/t3-0.1.4-linux-x64.tar.gz",
-    "hash": "sha256-jXWa/4sg8G/S9NIGU7CbO9/6uI3ud1KGZYIAXLTwMbk="
+    "url": "https://github.com/pingdotgg/t3code/releases/download/v0.1.5/t3-0.1.5-linux-x64.tar.gz",
+    "hash": "sha256-IdUNzJxjQiGxG1jWqUNQ0sbuNpBXN7BUsR+k66KVqYs="
   },
   "desktop": {
-    "url": "https://github.com/pingdotgg/t3code/releases/download/v0.1.4/T3-Code-0.1.4-x86_64.AppImage",
-    "hash": "sha512-ZZzmiH0UmjyhrP47CDAP6cc/xEocraTCXzLSaP8Lr9VqbG1UZ8U17gELYSRX7G+T+QrrRkV+NfuiP8PH3oHJXg=="
+    "url": "https://github.com/pingdotgg/t3code/releases/download/v0.1.5/T3-Code-0.1.5-x86_64.AppImage",
+    "hash": "sha512-JIlCnHnKPtEwCQ005COuef+53HjKfHJBoQNZDZBg8lXJ6TCz7+ZhYXFvs2qiEmsjcN2/HFh0eA5yDsFubxkv4Q=="
   },
   "browser": {
     "version": "156.0.8078.70",
