@@ -1,16 +1,16 @@
 {
-  "version": "0.1.6",
+  "version": "0.1.7",
   "server": {
-    "url": "https://github.com/pingdotgg/t3code/releases/download/v0.1.6/t3-0.1.6-linux-x64.tar.gz",
-    "hash": "sha256-fPMdqQ3uQfUk3VtnnrttQEY3yl2dxv2LwBlRHVe7d+Y="
+    "url": "https://github.com/pingdotgg/t3code/releases/download/v0.1.7/t3-0.1.7-linux-x64.tar.gz",
+    "hash": "sha256-wImJK/eSLi5zxvRKXR6hJcmfcON4wYNhy77S+6GSDmw="
   },
   "desktop": {
-    "url": "https://github.com/pingdotgg/t3code/releases/download/v0.1.6/T3-Code-0.1.6-x86_64.AppImage",
-    "hash": "sha512-p7DVuyB+gH2ek8IKMyZqj3Xel9g+JZMRGp6Nmmlk9GO+F94Q19dARYSAvuLQNM7IguxmP6zKktWgrhG/6L0qXQ=="
+    "url": "https://github.com/pingdotgg/t3code/releases/download/v0.1.7/T3-Code-0.1.7-x86_64.AppImage",
+    "hash": "sha512-6JalhN+xu4ZXxX5rjRqUlDtv43Qs7FFd1szwLTbJPU1VthN1h8v4i2v9g80yS3jMSvPguX/eW3BRdyUmz97dqg=="
   },
   "browser": {
-    "version": "156.0.8078.70",
-    "url": "https://storage.googleapis.com/chrome-for-testing-public/156.0.8078.70/linux64/chrome-headless-shell-linux64.zip",
-    "hash": "sha256-oxPaWSJh/x40LB5QfTFfJbGAkAbAUI93zoYVHUZNTMs="
+    "version": "156.0.8078.80",
+    "url": "https://storage.googleapis.com/chrome-for-testing-public/156.0.8078.80/linux64/chrome-headless-shell-linux64.zip",
+    "hash": "sha256-VH3NN04Clhv5mPYEaiZ2RPhQIiXDa7eMowfasyoLPrQ="
   }
 }
