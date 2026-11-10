@@ -5,6 +5,7 @@
   autoPatchelfHook,
   callPackage,
   runtimeShell,
+  vulkan-loader,
   sources,
 }: let
   browser = callPackage ./browser.nix {inherit sources;};
@@ -16,7 +17,7 @@ in
     src = fetchurl {inherit (sources.server) url hash;};
 
     nativeBuildInputs = [autoPatchelfHook];
-    buildInputs = [stdenv.cc.cc.lib];
+    buildInputs = [stdenv.cc.cc.lib vulkan-loader];
 
     # `t3` is a Node single-executable application: the JS bundle lives in a
     # non-allocated ELF note section that strip is free to drop.
@@ -30,7 +31,7 @@ in
 
       # Prebuilt addons for a libc we do not run on; autoPatchelf cannot
       # satisfy them and the server never loads them on glibc.
-      find $out/lib/t3code/node_modules -type d -name '*-musl' -prune -exec rm -r {} +
+      find $out/lib/t3code/node_modules -type d \( -name '*-musl' -o -name 'musl_*' \) -prune -exec rm -r {} +
 
       # The binary locates client/ and node_modules/ next to its real path,
       # so the wrapper can exec it from here.
