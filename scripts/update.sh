@@ -28,17 +28,20 @@ current=$(jq -r .version sources.json)
 
 base=$repo/releases/download/v$version
 server=t3-$version-linux-x64.tar.gz
-desktop=T3-Code-$version-x86_64.AppImage
 
 server_hex=$(curl -fsSL "$base/SHA256SUMS" | awk -v f="$server" '$2 == f { print $1 }')
 manifest=$(curl -fsSL "$base/latest-linux.yml")
 # The top-level path/sha512 pair of the electron-updater manifest describes
 # the AppImage; check the name so a layout change fails here, not at build.
-manifest_path=$(awk '$1 == "path:" { print $2 }' <<<"$manifest")
+desktop=$(awk '/^path:/ { print $2 }' <<<"$manifest")
 desktop_b64=$(awk '$1 == "sha512:" && !/^ / { print $2 }' <<<"$manifest")
 
-if [ -z "$server_hex" ] || [ -z "$desktop_b64" ] || [ "$manifest_path" != "$desktop" ]; then
-  echo "release v$version does not have the expected assets" >&2
+if [[ $desktop != T3-Code-x86_64.AppImage && $desktop != "T3-Code-$version-x86_64.AppImage" ]]; then
+  echo "release v$version: unexpected AppImage path '$desktop' in latest-linux.yml" >&2
+  exit 1
+fi
+if [ -z "$server_hex" ] || [ -z "$desktop_b64" ]; then
+  echo "release v$version is missing a server or desktop checksum" >&2
   exit 1
 fi
 
