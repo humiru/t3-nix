@@ -48,7 +48,7 @@ fi
 # The server downloads a pinned Chrome for Testing headless shell on first
 # use; the pin lives in this file as a version and per-platform SHA-256.
 browser_source=$(curl -fsSL "https://raw.githubusercontent.com/pingdotgg/t3code/v$version/apps/server/src/preview/PreviewBrowser.ts")
-browser_version=$(sed -nE 's/^const VERSION = "([0-9.]+)";$/\1/p' <<<"$browser_source")
+browser_version=$(sed -nE 's/^(export )?const VERSION = "([0-9.]+)";$/\2/p' <<<"$browser_source")
 browser_hex=$(awk '/^  linux64: \{/ { found = 1 } found && /sha256:/ { gsub(/[",]/, "", $2); print $2; exit }' <<<"$browser_source")
 
 if [ -z "$browser_version" ] || ! [[ $browser_hex =~ ^[0-9a-f]{64}$ ]]; then
